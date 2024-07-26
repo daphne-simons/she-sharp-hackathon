@@ -6,12 +6,11 @@ from azure.core.credentials import AzureKeyCredential
 
 # Put the keys and variables here (never put your real keys in the code)
 AOAI_ENDPOINT = "https://polite-ground-030dc3103.4.azurestaticapps.net/api/v1"
-AOAI_KEY = "702a03df-3742-4136-bb82-c7b18b256ef5"
+AOAI_KEY = "18a0c691-1183-4c00-b088-c57709996523"
 MODEL_NAME = "gpt-35-turbo-16k"
 AZURE_SEARCH_KEY = AOAI_KEY
 AZURE_SEARCH_ENDPOINT = AOAI_ENDPOINT
 AZURE_SEARCH_INDEX = "margiestravel"
-
 
 # Set up the client for AI Chat
 client = AzureOpenAI(
@@ -25,19 +24,28 @@ search_client = SearchClient(
     index_name=AZURE_SEARCH_INDEX,
     )
 
+MESSAGES = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "Who won the world series in 2020?"},
+    {
+        "role": "assistant",
+        "content": "The Los Angeles Dodgers won the World Series in 2020.",
+    },
+    {"role": "user", "content": "Where was it played?"},
+]
 
+completion = client.chat.completions.create(
+    model=MODEL_NAME,
+    messages=MESSAGES,
+)
 
+print(completion.model_dump_json(indent=2))
 
 # PUT YOUR IMPORTS HERE
 
-
 # PUT YOUR CONSTANTS HERE
 
-
-
 # PUT YOUR CODE FOR CREATING YOUR AI AND SEARCH CLIENTS HERE
-
-
 
 # PUT YOUR CODE FOR GETTING YOUR AI ANSWER INSIDE THIS FUNCTION
 def get_response(question, message_history=[]):
@@ -47,8 +55,6 @@ def get_response(question, message_history=[]):
   #
 
   return answer, message_history + [{"role": "user", "content": question}]
-
-
 
 
 
